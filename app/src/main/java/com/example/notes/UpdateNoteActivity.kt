@@ -29,12 +29,28 @@ class UpdateNoteActivity : AppCompatActivity() {
         binding.UpdateContentEditText.setText(note.content)
 
         binding.updateSaveButton.setOnClickListener{
-            val newTitle = binding.updateTitleEditText.text.toString()
-            val newContent = binding.UpdateContentEditText.text.toString()
-            val updateNote = Note(noteId,newTitle,newContent)
-            db.updateNote(updateNote)
-            finish()
-            Toast.makeText(this,"Changes Saved",Toast.LENGTH_SHORT).show()
+            val newTitle = binding.updateTitleEditText.text.toString().trim()
+            val newContent = binding.UpdateContentEditText.text.toString().trim()
+
+            if (validateInput(newTitle, newContent)) {
+                val updateNote = Note(noteId, newTitle, newContent)
+                db.updateNote(updateNote)
+                Toast.makeText(this, "Changes Saved", Toast.LENGTH_SHORT).show()
+                finish()
+            }
+        }
+    }
+    private fun validateInput(title: String, content: String): Boolean {
+        return when {
+            title.isEmpty() -> {
+                Toast.makeText(this, "Title is required", Toast.LENGTH_SHORT).show()
+                false
+            }
+            content.isEmpty() -> {
+                Toast.makeText(this, "Content is required", Toast.LENGTH_SHORT).show()
+                false
+            }
+            else -> true
         }
     }
 }
